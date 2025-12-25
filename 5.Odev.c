@@ -1,55 +1,85 @@
 #include <stdio.h>
-#include <ctype.h>
+#include <stdlib.h>
 
-char stack[100];
-int top=-1;
+struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+};
 
-void push(char c) {
-    stack[++top] =c;
-}
-
-char pop() {
-    if(top==-1) return -1;
-    return stack[top--];
-}
-
-int precedence(char c) {
-    if(c=='+' || c=='-') return 1;
-    if(c=='*' || c=='/') return 2;
-    return 0;
-}
-
-void toPostfix(char*exp) {
-    int i =0;
-    while(exp[i] != '\0') {
-        char k =exp[i];
-
-        if(isalnum(k)) {
-            printf("%c", k);
-        }
-        else if(k=='(') {
-            push(k);
-        }
-        else if(k==')') {
-            while(top!= -1 && stack[top] != '(')
-                printf("%c", pop());
-            pop();
-        }
-        else {
-            while(top!= -1 && precedence(stack[top])>= precedence(k))
-                printf("%c", pop());
-            push(k);
-        }
-        i++;
+void printList(struct Node* node) {
+    struct Node* last;
+    printf("Duz Sirali: ");
+    while (node != NULL) {
+        printf("%d ", node->data);
+        last = node;
+        node = node->next;
     }
-
-    while(top!= -1)
-        printf("%c", pop());
     printf("\n");
 }
 
+void push(struct Node** head_ref, int new_data) {
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+    new_node->next = (*head_ref);
+    new_node->prev = NULL;
+
+    if ((*head_ref) != NULL)
+        (*head_ref)->prev = new_node;
+
+      (*head_ref) = new_node;
+}
+
+void insertAfter(struct Node* prev_node, int new_data) {
+    if (prev_node == NULL) {
+        printf("Onceki dugum NULL olamaz.\n");
+        return;
+    }
+
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    new_node->data = new_data;
+
+    new_node->next = prev_node->next;
+    prev_node->next = new_node;
+    new_node->prev = prev_node;
+
+    if (new_node->next != NULL)
+        new_node->next->prev = new_node;
+}
+
+
+void deleteNode(struct Node** head_ref, struct Node* del) {
+    if (*head_ref == NULL || del == NULL)
+        return;
+    
+    if (*head_ref == del)
+        *head_ref = del->next;
+
+    if (del->next != NULL)
+        del->next->prev = del->prev;
+
+    if (del->prev != NULL)
+        del->prev->next = del->next;
+
+    free(del);
+}
+
 int main() {
-    char ifade[] ="a+b*(c^d-e)";
-    toPostfix(ifade);
+    struct Node* head = NULL;
+    push(&head, 30);
+    push(&head, 20);
+    push(&head, 10);
+
+    printf("Liste ilk hali:\n");
+    printList(head);
+
+    insertAfter(head->next, 25);
+    printf("20'den sonraya 25 eklendi:\n");
+    printList(head);
+
+    deleteNode(&head, head->next);
+    printf("20 silindi:\n");
+    printList(head);
+
     return 0;
 }
