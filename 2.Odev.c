@@ -1,18 +1,19 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-struct Node {
-    int data;
-    struct Node* next;
-};
-
-void destroy(struct Node* head) {
-    if (head == NULL) {
+void hanoi(int n, char source, char dest, char aux) {
+    if (n == 1) {
+        printf("Disk1: %c -> %c\n",source,dest);
         return;
     }
+    
+  hanoi(n - 1, source, aux, dest);
+    
+ printf("Disk %d: %c -> %c\n", n, source, dest);
+  hanoi(n - 1, aux, dest, source);
+}
 
-   destroy(head->next);
-
-    printf("Siliniyor: %d\n", head->data);
-    free(head);
+int main() {
+    int n = 3;
+ hanoi(n, 'A', 'C', 'B');
+    return 0;
 }
