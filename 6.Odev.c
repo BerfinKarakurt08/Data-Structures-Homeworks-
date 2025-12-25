@@ -1,40 +1,101 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-int queue[5];
-int front =-1, rear =-1;
+struct Node {
+    int data;
+    struct Node* next;
+};
 
-void enqueue(int val) {
-    if ((front==0 && rear==4) || (front==rear + 1)) {
-        printf("Queue dolu!\n");
-        return;
-    }
+
+void insertEnd(struct Node** head_ref, int data) {
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
+    struct Node* temp = *head_ref;
     
-    if (front==-1) front =0;
-    rear = (rear + 1) % 5;
-    queue[rear] =val;
-    printf("Eklendi:%d\n",val);
+    new_node->data = data;
+    new_node->next = *head_ref; // Yeni dugum basa donmeli
+
+    
+    if (*head_ref == NULL) {
+        new_node->next = new_node; // Kendine doner
+        *head_ref = new_node;
+    } 
+    else {
+       
+        while (temp->next != *head_ref) {
+            temp = temp->next;
+        }
+        temp->next = new_node; // Son dugum artik yeniyi gosterir
+    }
 }
 
-void dequeue() {
-    if (front ==-1) {
-        printf("Queue bos!\n");
+void deleteNode(struct Node** head, int key) {
+    if (*head == NULL) return;
+
+    struct Node *curr = *head, *prev;
+
+    
+    if (curr->data == key && curr->next == curr) {
+        *head = NULL;
+        free(curr);
         return;
     }
-    
-    printf("Cikarildi:%d\n",queue[front]);
-    
-    if (front ==rear) {
-        front =-1;
-        rear =-1;
-    } else {
-        front =(front+1) % 5;
+
+   
+    if (curr->data == key) {
+        prev = *head;
+       
+        while (prev->next != *head)
+            prev = prev->next;
+            
+        prev->next = curr->next;
+        *head = curr->next;
+        free(curr);
+    }
+   
+    else {
+        while (curr->data != key) {
+            if (curr->next == *head) {
+                printf("Eleman bulunamadi.\n");
+                return;
+            }
+            prev = curr;
+            curr = curr->next;
+        }
+        prev->next = curr->next;
+        free(curr);
+    }
+}
+
+
+void printList(struct Node* head) {
+    struct Node* temp = head;
+    if (head != NULL) {
+        do {
+            printf("%d -> ", temp->data);
+            temp = temp->next;
+        } while (temp != head);
+        printf("(Head)\n");
     }
 }
 
 int main() {
-    enqueue(10);
-    enqueue(20);
-    dequeue();
-    enqueue(30);
+    struct Node* head = NULL;
+
+    insertEnd(&head, 10);
+    insertEnd(&head, 20);
+    insertEnd(&head, 30);
+    insertEnd(&head, 40);
+
+    printf("Circular List: ");
+    printList(head);
+
+    printf("20 Silindi: ");
+    deleteNode(&head, 20); 
+    printList(head);
+    
+    printf("10 (Head) Silindi: ");
+    deleteNode(&head, 10); 
+    printList(head);
+
     return 0;
 }
