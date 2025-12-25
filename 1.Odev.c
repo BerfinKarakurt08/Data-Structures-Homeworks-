@@ -1,30 +1,36 @@
 #include <stdio.h>
 
-
-struct Element {
-    int row;
-    int col;
-    int value;
-};
+struct Eleman {
+    int satir;
+    int sutun;
+    int deger;
+  };
 
 int main() {
-    struct Element matrix[3];
+    int normalMatris[4][5] = {
+        {0, 0, 3, 0, 4},
+        {0, 0, 5, 7, 0},
+        {0, 0, 0, 0, 0},
+        {0, 2, 6, 0, 0}
+    };
 
-    matrix[0].row = 0;
-    matrix[0].col = 2;
-    matrix[0].value = 5;
+    struct Eleman sparse[20];
+    int k= 0; 
+  for(int i=0; i<4; i++) {
+        for(int j=0; j<5;  j++) {
+            if(normalMatris[i][j] !=0) {
+                sparse[k].satir = i;
+                sparse[k].sutun = j;
+                sparse[k].deger =normalMatris[i][j];
+                k++;
+             }
+        }
+      }
 
-    matrix[1].row = 1;
-    matrix[1].col = 4;
-    matrix[1].value = 9;
-
-    matrix[2].row = 3;
-    matrix[2].col = 3;
-    matrix[2].value = 6;
-
-    printf("Row\tCol\tValue\n");
-    for(int i = 0; i < 3; i++) {
-        printf("%d\t%d\t%d\n", matrix[i].row, matrix[i].col, matrix[i].value);
+    
+    printf("Satir\tSutun\tDeger\n");
+    for(int i=0;i<k;i++) {
+        printf("%d\t%d\t%d\n", sparse[i].satir, sparse[i].sutun, sparse[i].deger);
     }
 
     return 0;
