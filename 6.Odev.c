@@ -6,25 +6,22 @@ struct Node {
     struct Node* next;
 };
 
-
 void insertEnd(struct Node** head_ref, int data) {
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
     struct Node* temp = *head_ref;
-    
-    new_node->data = data;
-    new_node->next = *head_ref; // Yeni dugum basa donmeli
+     new_node->data = data;
+    new_node->next = *head_ref;
 
     
     if (*head_ref == NULL) {
-        new_node->next = new_node; // Kendine doner
+        new_node->next = new_node; 
         *head_ref = new_node;
     } 
     else {
-       
-        while (temp->next != *head_ref) {
+         while (temp->next != *head_ref) {
             temp = temp->next;
         }
-        temp->next = new_node; // Son dugum artik yeniyi gosterir
+        temp->next = new_node; 
     }
 }
 
@@ -33,14 +30,12 @@ void deleteNode(struct Node** head, int key) {
 
     struct Node *curr = *head, *prev;
 
-    
-    if (curr->data == key && curr->next == curr) {
+     if (curr->data == key && curr->next == curr) {
         *head = NULL;
         free(curr);
-        return;
+         return;
     }
 
-   
     if (curr->data == key) {
         prev = *head;
        
@@ -56,7 +51,7 @@ void deleteNode(struct Node** head, int key) {
         while (curr->data != key) {
             if (curr->next == *head) {
                 printf("Eleman bulunamadi.\n");
-                return;
+             return;
             }
             prev = curr;
             curr = curr->next;
@@ -65,7 +60,6 @@ void deleteNode(struct Node** head, int key) {
         free(curr);
     }
 }
-
 
 void printList(struct Node* head) {
     struct Node* temp = head;
@@ -80,7 +74,6 @@ void printList(struct Node* head) {
 
 int main() {
     struct Node* head = NULL;
-
     insertEnd(&head, 10);
     insertEnd(&head, 20);
     insertEnd(&head, 30);
@@ -96,6 +89,6 @@ int main() {
     printf("10 (Head) Silindi: ");
     deleteNode(&head, 10); 
     printList(head);
-
-    return 0;
+  return 0;
 }
+
