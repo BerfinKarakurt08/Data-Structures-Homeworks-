@@ -1,34 +1,45 @@
 #include <stdio.h>
 
-char tree[20];
+#define V 6
 
-void init() {
-    for(int i=0;i<20;i++) tree[i] ='-';
-}
+int graph[V][V] = {
+    {0, 1, 1, 0, 0, 0},
+    {1, 0, 0, 0, 0, 0},
+    {1, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 1, 0},
+    {0, 0, 0, 1, 0, 0},
+    {0, 0, 0, 0, 0, 0}
+};
 
-void setRoot(char k) {
-    tree[0] = k;
-}
+int visited[V];
 
-void setLeft(char k,int parent) {
-    if(tree[parent]=='-') return;
-    tree[(parent*2) +1] =k;
-}
+void DFS(int startNode) {
+    visited[startNode] = 1;
+    printf("%d ", startNode);
 
-void setRight(char k,int parent) {
-    if(tree[parent]=='-') return;
-    tree[(parent*2) +2] =k;
-}
+    for(int i = 0; i < V; i++) {
+        if(graph[startNode][i] == 1 && visited[i] == 0) {
+            DFS(i);
+        }
+     }
+   }
 
 int main() {
-    init();
-    setRoot('A');
-    setLeft('B',0);
-    setRight('C',0);
-
-    for(int i=0; i<10; i++) {
-        if(tree[i] != '-')
-            printf("Index %d:%c\n",i,tree[i]);
+    for(int i = 0; i < V; i++) {
+        visited[i] = 0;
     }
+  int clusterCount = 0;
+
+  printf("Clusters:\n");
+   for(int i = 0; i < V; i++) {
+        if(visited[i] == 0) {
+            clusterCount++;
+            printf("Cluster %d: { ", clusterCount);
+            DFS(i);
+            printf("}\n");
+         }
+      }
+    printf("Total Clusters: %d\n", clusterCount);
+
     return 0;
-}
+ }
