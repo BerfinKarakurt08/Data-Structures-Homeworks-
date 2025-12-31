@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 #define V 6
 
 int graph[V][V] = {
@@ -43,3 +42,4 @@ int main() {
 
     return 0;
  }
+
